@@ -11,6 +11,7 @@ app.use(cors())
 
 app.use(express.json())
 
+//connect to database locally
 mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser : true,
     useUnifiedTopology : true
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URL,{
     console.log("connected to database successfully")
 )
 
+//server connection
 const server = app.listen(process.env.PORT,()=>{
     console.log("port started")
 })
