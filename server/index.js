@@ -1,13 +1,17 @@
 const express = require("express")
 const cors = require("cors")
 const mongoose = require("mongoose")
+const userRoute = require('./Routes/userRoute')
+var bodyParser = require('body-parser')
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const app = express();
 
 require("dotenv").config();
 
-
+app.use(bodyParser.json());
 app.use(cors())
+app.use('/api/auth',userRoute)
 
 app.use(express.json())
 

@@ -1,18 +1,80 @@
 // eslint-disable-next-line 
-import React from 'react'
-import { Link } from 'react-router-dom';
-import styled from 'styled-components'
-import logo from '../assets/logo.svg'
+import React,{useState,useEffect} from 'react';
+import { Link,useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import logo from '../assets/logo.svg';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios'
+import {registerRoute }from '../utils/APIRoutes'
+
+
 
 function Register() {
+    const navigate = useNavigate();
+    const vallidationFormat = {
+        position: "top-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        }
 
-
-    const handleSubmit = (event)=>{
+    const [values,setValues] = useState({
+        username:"",
+        email:"",
+        password:"",
+        confirmPassword:"",
+    })
+    const handleSubmit = async(event)=>{
         event.preventDefault();
-        alert("form");
+        console.log('data')
+        if(formValidation()){
+            const { email, username, password } = values;
+            
+            const {data} = await axios.post(registerRoute,{
+                username,
+                email,
+                password,
+            })
+            if(data.status === false){
+                toast.error(data.msg, vallidationFormat );
+            }
+            if(data.status === true){
+                localStorage.setItem('chat-app-user',JSON.stringify(data.user))
+                navigate('/')
+            }
+            
+        }
     }
 
-    const handleChange = (event)=>{}
+    const formValidation = ()=>{
+        const {username,email,password,confirmPassword} = values;
+        if(password !== confirmPassword){
+            toast.error('Passwords dosen\'t match', vallidationFormat );
+            return false;
+        }else if(username.length <3){
+            toast.error('username has to more than 3 character', vallidationFormat );
+            return false;
+        }
+        else if(password.length <8){
+            toast.error('password has to be more than 8 character', vallidationFormat );
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+    const handleChange = (event)=>{
+        console.log(event.target.name)
+        console.log(event.target.value)
+        setValues({ ...values,[event.target.name] : event.target.value})
+    }
   return (
     <>
         <FormContainer>
@@ -24,8 +86,8 @@ function Register() {
 
                 <input
                 type='text' 
-                placeholder='name'
-                name='name'
+                placeholder='username'
+                name='username'
                 onChange={(event)=>handleChange(event)}
                 />
 
@@ -54,6 +116,7 @@ function Register() {
 
             </form>
         </FormContainer>
+          <ToastContainer/>
     </>
   )
 }
@@ -101,6 +164,9 @@ const FormContainer = styled.div`
             width:100%;
             padding:0.6rem;
             color:white;
+            input:focus{
+            background: transparent;
+            }
         }
         button{
             padding:0.3rem;
