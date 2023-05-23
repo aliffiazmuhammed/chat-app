@@ -31,10 +31,12 @@ function Register() {
     })
     const handleSubmit = async(event)=>{
         event.preventDefault();
-        console.log('data')
         if(formValidation()){
             const { email, username, password } = values;
-            
+
+            //axios connects frontend and backend
+            //axios post data to the backend
+            //axios->route,data
             const {data} = await axios.post(registerRoute,{
                 username,
                 email,
@@ -45,7 +47,7 @@ function Register() {
             }
             if(data.status === true){
                 localStorage.setItem('chat-app-user',JSON.stringify(data.user))
-                navigate('/')
+                navigate('/setavatar')
             }
             
         }
@@ -63,6 +65,9 @@ function Register() {
         else if(password.length <8){
             toast.error('password has to be more than 8 character', vallidationFormat );
             return false;
+        }else if(email === ""){
+            toast.error('email not entered', vallidationFormat );
+            return false;
         }else{
             return true;
         }
@@ -71,8 +76,6 @@ function Register() {
 
 
     const handleChange = (event)=>{
-        console.log(event.target.name)
-        console.log(event.target.value)
         setValues({ ...values,[event.target.name] : event.target.value})
     }
   return (

@@ -11,6 +11,9 @@ require("dotenv").config();
 
 app.use(bodyParser.json());
 app.use(cors())
+
+//route setup
+//userRuote->routes folder
 app.use('/api/auth',userRoute)
 
 app.use(express.json())
