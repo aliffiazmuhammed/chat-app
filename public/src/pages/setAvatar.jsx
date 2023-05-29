@@ -40,7 +40,7 @@ function SetAvatar() {
           try {
             const data = [];
             for (let i = 0; i < 4; i++) {
-                //apikey=ShPdyK82MWiZpm
+                //?apikey=ShPdyK82MWiZpm
               const response = await axios.get(`${avatarapi}${Math.round(Math.random() * 10000)}`);
               const buffer = Buffer.from(response.data);
               data.push(buffer.toString('base64'));
@@ -74,7 +74,7 @@ function SetAvatar() {
 
             if(data.status){
                 user.avatarImage=imageData
-                user.sAvatarImageSet=true
+                user.isAvatarImageSet=true
                 localStorage.setItem('chat-app-user',JSON.stringify(user))
                 navigate('/');
             }else{

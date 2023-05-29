@@ -52,7 +52,7 @@ module.exports.login = async(req,res,next)=>{
 
 module.exports.setAvatar = async(req,res,next)=>{
     const userId = req.params.id;
-    const image = req.body.image;
+    const image = req.body.imageData;
     try {
         const UserFind = await User.findOneAndUpdate({_id:userId},{avatarImage:image,isAvatarImageSet:true})
         if(UserFind.isAvatarImageSet === true){
@@ -65,5 +65,20 @@ module.exports.setAvatar = async(req,res,next)=>{
     }
     
 
-    
+}
+
+module.exports.getUsers = async(req,res,next)=>{
+    const userId = req.params.id;
+
+    try {
+        const users = await User.find({_id:{$ne:userId}}).select([
+            "email",
+            "username",
+            "avatarImage",
+            "_id"
+        ])
+        return res.json(users)
+    } catch (error) {
+        console.log(error)
+    }
 }
